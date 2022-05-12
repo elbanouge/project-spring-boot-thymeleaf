@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+	<link type="text/css" rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
+	<script src="https://kit.fontawesome.com/1a650dda5e.js" crossorigin="anonymous"></script>
+	<title>Edit Bug</title>
+</head>
+
+<body>
+	<!-- <div align="center">
+		<h1>Edit Product</h1>
+		<br />
+		<form action="#" th:action="@{/save}" th:object="${product}" method="post">
+			<table border="0" cellpadding="10">
+				<tr>
+					<td>Product ID:</td>
+					<td><input type="text" th:field="*{id}" readonly="readonly" /></td>
+				</tr>
+				<tr>
+					<td>Product Name:</td>
+					<td><input type="text" th:field="*{name}" /></td>
+				</tr>
+				<tr>
+					<td>Brand:</td>
+					<td><input type="text" th:field="*{brand}" /></td>
+				</tr>
+				<tr>
+					<td>Made in:</td>
+					<td><input type="text" th:field="*{madein}" /></td>
+				</tr>
+				<tr>
+					<td>Price:</td>
+					<td><input type="text" th:field="*{price}" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><button type="submit">Save</button></td>
+				</tr>
+			</table>
+		</form>
+	</div> -->
+	<!-- modifier bug -->
+	<div class="back">
+		<div class="card w-50">
+			<h1>Modifier un bug</h1>
+			<div class="container-sm">
+				<form action="#" th:action="@{/save}" th:object="${bug}" method="post">
+					<div class="row justify-content-md-center">
+						<div class="col-6 mt-3 text-center d-none">
+							<input type="text" th:field="*{id}" readonly="true">
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<label>Environnement:</label>
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<input type="text" th:field="*{environnement}" placeholder="Environnement" />
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<label class="mx-0 mx-md-4">logiciel:</label>
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<input type="text" th:field="*{logiciel}" placeholder="logiciel" />
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<label class="mx-0 mx-md-4">urgence:</label>
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<select name="" th:field="*{urgence}">
+								<option th:value="'C'" th:text="Critique"></option>
+								<option th:value="'U'" th:text="Urgent"></option>
+								<option th:value="'N'" th:text="Normal"></option>
+								<option th:value="'NU'" th:text="Non_urgent"></option>
+							</select>
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<label class="mx-0 mx-md-4">description:</label>
+						</div>
+						<div class="col-6 mt-3 text-center">
+							<textarea name="" th:field="*{description}" cols="1" rows="2">
+			                </textarea>
+						</div>
+						<div class="col-12 mt-3 text-center">
+							<button name="" id="" type="submit" class="btn btn-primary" role="button">Save</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
