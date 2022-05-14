@@ -56,7 +56,13 @@ public class TicketService {
     }
 
     public void delete(Long id) {
-        ticketRepository.deleteById(id);
+        Ticket ticket = ticketRepository.findById(id).get();
+        System.out.println("*****" + ticket.toString());
+        if (ticket != null) {
+            ticketRepository.delete(ticket);
+        } else {
+            System.out.println("Ticket not found");
+        }
     }
 
     public String userConnected() {
