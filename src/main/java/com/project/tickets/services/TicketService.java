@@ -7,6 +7,7 @@ import java.util.Set;
 import com.project.tickets.entities.Role;
 import com.project.tickets.entities.Ticket;
 import com.project.tickets.entities.User;
+import com.project.tickets.repositories.RoleRepository;
 import com.project.tickets.repositories.TicketRepository;
 import com.project.tickets.repositories.UserRepository;
 
@@ -22,6 +23,9 @@ public class TicketService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     public void save(Ticket ticket) {
         User user = userRepository.getUserByUsername(userConnected());
@@ -56,12 +60,20 @@ public class TicketService {
     }
 
     public void delete(Long id) {
-        Ticket ticket = ticketRepository.findById(id).get();
-        System.out.println("*****" + ticket.toString());
-        if (ticket != null) {
-            ticketRepository.delete(ticket);
-        } else {
-            System.out.println("Ticket not found");
+        try {
+            Ticket ticket = get(id);
+            if (ticket != null) {
+                User user = ticket.getUsers().iterator().next();
+                if (user != null) {
+                    ticket.getUsers().remove(user);
+                    ticketRepository.delete(ticket);
+                    System.out.println("Ticket deleted");
+                }
+            } else {
+                System.out.println("Ticket not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
