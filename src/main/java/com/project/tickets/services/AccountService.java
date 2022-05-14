@@ -1,5 +1,8 @@
 package com.project.tickets.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.project.tickets.entities.Role;
 import com.project.tickets.entities.User;
 import com.project.tickets.repositories.RoleRepository;
@@ -28,7 +31,7 @@ public class AccountService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         } else {
-            throw new RuntimeException("User already exist");
+            System.out.println("User already exist");
         }
     }
 
@@ -37,7 +40,7 @@ public class AccountService {
         if (roleExist == null) {
             roleRepository.save(role);
         } else {
-            throw new RuntimeException("Role already exist");
+            System.out.println("Role already exist");
         }
     }
 
@@ -48,7 +51,24 @@ public class AccountService {
         if (bool) {
             userRepository.save(user);
         } else {
-            throw new RuntimeException("Role already exists");
+            System.out.println("Role already exist");
         }
+    }
+
+    public List<User> getUsersByRole(String name) {
+        List<User> users_roles = new ArrayList<>();
+        List<User> users = (List<User>) userRepository.findAll();
+        for (User user : users) {
+            for (Role role : user.getRoles()) {
+                if (role.getName().equals(name)) {
+                    users_roles.add(user);
+                }
+            }
+        }
+        return users_roles;
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
     }
 }

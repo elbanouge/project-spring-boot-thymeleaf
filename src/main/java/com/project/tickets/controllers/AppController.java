@@ -1,9 +1,12 @@
 package com.project.tickets.controllers;
 
 import java.util.List;
+import java.util.Set;
 
-import com.project.tickets.entities.Bug;
-import com.project.tickets.services.BugService;
+import com.project.tickets.entities.Ticket;
+import com.project.tickets.entities.User;
+import com.project.tickets.services.AccountService;
+import com.project.tickets.services.TicketService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,51 +15,71 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class AppController {
 	@Autowired
-	private BugService service;
+	private TicketService ticketService;
+
+	@Autowired
+	AccountService accountService;
 
 	@RequestMapping("/")
 	public String viewHomePage(Model model) {
-		List<Bug> listBugs = service.listAll();
-		model.addAttribute("listBugs", listBugs);
-		listBugs.forEach(System.out::println);
+		List<Ticket> listTickets = ticketService.listAll();
+		model.addAttribute("listTickets", listTickets);
 		System.out.println("Home Page");
 		return "index";
 	}
 
 	@RequestMapping("/new")
-	public String showNewBugForm(Model model) {
-		Bug bug = new Bug();
-		model.addAttribute("bug", bug);
-		System.out.println("New Bug Form");
-		return "new_bug";
+	public String showNewTicketForm(Model model) {
+		Ticket Ticket = new Ticket();
+		model.addAttribute("ticket", Ticket);
+		System.out.println("New Ticket Form");
+		return "new_ticket";
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String saveBug(@ModelAttribute("bug") Bug bug) {
-		service.save(bug);
-		System.out.println("Bug Saved Successfully");
+	public String saveTicket(@ModelAttribute("ticket") Ticket ticket) {
+		ticket.setStatus("NA");
+		ticketService.save(ticket);
+		System.out.println("Ticket Saved Successfully");
+		return "redirect:/";
+	}
+
+	Ticket ticket_user = new Ticket();
+
+	@RequestMapping(value = "/update", method = RequestMethod.GET)
+	public String updateTicket(@ModelAttribute("ticket") Ticket ticket,
+			@RequestParam(value = "nameDev", required = false) String nameDev) {
+		Set<User> users = ticket.getUsers();
+		users.addAll(ticket_user.getUsers());
+
+		ticketService.update(ticket, users);
+		System.out.println("Ticket Updated Successfully");
 		return "redirect:/";
 	}
 
 	@RequestMapping("/edit/{id}")
-	public ModelAndView showEditBugForm(@PathVariable(name = "id") Long id) {
-		ModelAndView mav = new ModelAndView("edit_bug");
-		System.out.println("Bug à éditer : " + id);
-		Bug bug = service.get(id);
-		System.out.println("Bug à éditer : " + bug.toString());
-		mav.addObject("bug", bug);
+	public ModelAndView showEditTicketForm(@PathVariable(name = "id") Long id, Model model) {
+		List<User> users_dev = accountService.getUsersByRole("DEVELOPER");
+		model.addAttribute("list_devs", users_dev);
+
+		ModelAndView mav = new ModelAndView("edit_ticket");
+		Ticket ticket = ticketService.get(id);
+		System.out.println("Ticket à éditer : " + ticket.getUsers().toString());
+		mav.addObject("ticket", ticket);
+		ticket_user = ticket;
 		return mav;
 	}
 
 	@RequestMapping("/delete/{id}")
-	public String deleteBug(@PathVariable(name = "id") Long id) {
-		service.delete(id);
-		System.out.println("Bug supprimé : " + id);
+	public String deleteTicket(@PathVariable(name = "id") Long id) {
+		ticketService.delete(id);
+		System.out.println("Ticket supprimé : " + id);
 		return "redirect:/";
 	}
 }
